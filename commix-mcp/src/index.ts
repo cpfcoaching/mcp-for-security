@@ -16,16 +16,21 @@ const server = new McpServer({
 
 server.tool(
     "do-commix",
-    "Run Smuggler to detect HTTP Request Smuggling vulnerabilities",
+    "Run Commix to detect and exploit command injection vulnerabilities. Commix (short for [comm]and [i]njection [e]xploiter) is an open source penetration testing tool, written by Anastasios Stasinopoulos, that automates the detection and exploitation of command injection vulnerabilities in certain software.",
     {
-        url: z.string().url().describe("Target URL to detect HTTP Request Smuggling")
+        url: z.string().url().describe("Target URL to detect command injection (e.g., http://192.168.1.1/vuln.php?id=1)"),
+        commix_args: z.array(z.string()).optional().describe("Additional commix arguments (e.g., ['--batch', '--crawl=1'])")
     },
-    async ({ url }) => {
-        const baseArgs = [args[1],"-u", url];
-        const allArgs = [...baseArgs, url];
+    async ({ url, commix_args = [] }) => {
+        const pythonPath = args[0];
+        const commixPath = args[1];
+
+        // Ensure --batch is included for non-interactive use in MCP
+        const finalArgs = [commixPath, "-u", url, "--batch", ...commix_args];
+
         let output = '';
 
-        const commix = spawn(args[0],allArgs);
+        const commix = spawn(pythonPath, finalArgs);
 
         commix.stdout.on('data', (data) => {
             output += data.toString();
@@ -37,20 +42,16 @@ server.tool(
 
         return new Promise((resolve, reject) => {
             commix.on('close', (code) => {
-                if (code === 0) {
-                    output = removeAnsiCodes(output);
-                    
-                    resolve({
-                        content: [{
-                            type: "text",
-                            text: output
-                        }]
-                    });
-                } else {
-                    reject(new Error(`commix exited with code ${code}`));
-                }
+                output = removeAnsiCodes(output);
+
+                resolve({
+                    content: [{
+                        type: "text",
+                        text: output + `\n\nCommix process finished with exit code ${code}`
+                    }]
+                });
             });
-            
+
             commix.on('error', (error) => {
                 reject(new Error(`Failed to start commix: ${error.message}`));
             });
@@ -65,10 +66,10 @@ function removeAnsiCodes(input: string): string {
 async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
-    console.error("Smuggler MCP Server running on stdio");
+    console.error("Commix MCP Server running on stdio");
 }
 
 main().catch((error) => {
     console.error("Fatal error in main():", error);
     process.exit(1);
-}); 
+});

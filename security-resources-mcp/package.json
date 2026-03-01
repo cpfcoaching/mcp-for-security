@@ -1,0 +1,17 @@
+{
+    "name": "security-resources-mcp",
+    "version": "1.0.0",
+    "description": "MCP server providing security resources, checklists, and guides",
+    "main": "build/index.js",
+    "scripts": {
+        "build": "tsc"
+    },
+    "type": "module",
+    "dependencies": {
+        "@modelcontextprotocol/sdk": "^1.15.1"
+    },
+    "devDependencies": {
+        "@types/node": "^24.0.13",
+        "typescript": "^5.8.3"
+    }
+}

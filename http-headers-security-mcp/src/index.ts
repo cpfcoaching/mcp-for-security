@@ -8,70 +8,90 @@ import addHeadersData from "./owasp_headers_add.json";
 // Create server instance
 const server = new McpServer({
     name: "http-headers-security",
-    version: "1.0.0",
+    version: "1.0.1",
 });
 
-async function fetchHttpHeaders(target: string): Promise<string[]> {
+interface HeaderRecommendation {
+    header: string;
+    reason: string;
+}
+
+async function fetchHttpHeaders(target: string): Promise<Record<string, string>> {
     try {
         const response = await axios.get(target, {
-            timeout: 100000,
-            validateStatus: () => true // Accept all status codes
+            timeout: 30000,
+            validateStatus: () => true, // Accept all status codes
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (MCP Security Scanner; https://github.com/cyproxio/mcp-for-security)'
+            }
         });
 
-        return Object.entries(response.headers).map(([key, value]) => `${key}: ${value}`);
-    } catch (error: unknown) {
-        if (error instanceof Error) {
-            throw new Error(`Failed to fetch headers: ${error.message}`);
+        // Convert header values to string if they are arrays
+        const headers: Record<string, string> = {};
+        for (const [key, value] of Object.entries(response.headers)) {
+            headers[key.toLowerCase()] = Array.isArray(value) ? value.join(', ') : (value || '');
         }
-        throw new Error('Failed to fetch headers: Unknown error occurred');
+        return headers;
+    } catch (error: any) {
+        throw new Error(`Failed to fetch headers from ${target}: ${error.message}`);
     }
-}
-
-async function findMatchingRemoveHeaders(headers: string[]): Promise<string[]> {
-    const removeHeaders = removeHeadersData.headers;
-
-    return headers.filter(header => {
-        const headerName = header.split(':')[0].trim().toLowerCase();
-        return removeHeaders.some(h => h.toLowerCase() === headerName);
-    });
-}
-
-async function findMatchingAddedHeaders(headers: string[]): Promise<string[]> {
-    const addHeaders = addHeadersData.headers;
-    const existingHeaderNames = headers.map(header => header.split(':')[0].trim().toLowerCase());
-
-    return addHeaders
-        .filter(header => !existingHeaderNames.includes(header.name.toLowerCase()))
-        .map(header => `${header.name}: ${header.value}`);
 }
 
 server.tool(
     "analyze-http-header",
-    "Perform security analysis of HTTP response headers for a web application. This tool examines HTTP headers against OWASP security best practices, identifying both potentially dangerous headers that should be removed and recommended security headers that are missing. Results include specific recommendations for improving security posture.",
+    "Perform a security analysis of HTTP response headers against OWASP best practices. Identifies dangerous headers to remove and critical security headers to add.",
     {
-        target: z.string().describe("Target URL to analyze (e.g., https://example.com). The tool will make a request to this URL and evaluate its HTTP response headers for security issues."),
+        target: z.string().url().describe("Target URL to analyze (e.g., https://example.com)"),
     },
     async ({ target }) => {
-        return new Promise((resolve, reject) => {
-            fetchHttpHeaders(target)
-                .then(async headers => {
-                    const removeHeaders = await findMatchingRemoveHeaders(headers);
-                    const addedHeaders = await findMatchingAddedHeaders(headers);
-                    const result = { 
-                        removeHeaders: removeHeaders.length > 0 ? removeHeaders : ["No headers to remove"],
-                        addedHeaders: addedHeaders.length > 0 ? addedHeaders : ["No headers to add"]
-                    };
-                    resolve({
-                        content: [{
-                            type: "text",
-                            text: JSON.stringify(result, null, 2)
-                        }]
-                    });
-                })
-                .catch(error => {
-                    reject(error);
-                });
-        });
+        try {
+            const currentHeaders = await fetchHttpHeaders(target);
+
+            // Analyze headers to remove
+            const headersToRemove = removeHeadersData.headers
+                .filter(h => currentHeaders[h.toLowerCase()] !== undefined)
+                .map(h => ({
+                    header: h,
+                    value: currentHeaders[h.toLowerCase()]
+                }));
+
+            // Analyze headers to add
+            const headersToAdd = addHeadersData.headers
+                .filter(h => currentHeaders[h.name.toLowerCase()] === undefined)
+                .map(h => ({
+                    header: h.name,
+                    recommendedValue: h.value
+                }));
+
+            const result = {
+                target,
+                summary: {
+                    totalCurrentHeaders: Object.keys(currentHeaders).length,
+                    issuesFound: headersToRemove.length + headersToAdd.length,
+                    criticalMissing: headersToAdd.length
+                },
+                recommendations: {
+                    remove: headersToRemove.length > 0 ? headersToRemove : "No dangerous headers detected.",
+                    add: headersToAdd.length > 0 ? headersToAdd : "All recommended security headers are present."
+                },
+                rawHeaders: currentHeaders
+            };
+
+            return {
+                content: [{
+                    type: "text",
+                    text: JSON.stringify(result, null, 2)
+                }]
+            };
+        } catch (error: any) {
+            return {
+                isError: true,
+                content: [{
+                    type: "text",
+                    text: `Error analyzing headers: ${error.message}`
+                }]
+            };
+        }
     }
 );
 

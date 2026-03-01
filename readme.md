@@ -5,12 +5,11 @@
 [![Docker](https://img.shields.io/github/release/cyproxio/mcp-for-security?style=social)](https://github.com/cyproxio/mcp-for-security/releases)
 ---
 
-<img src="https://avatars.githubusercontent.com/u/89649708?s=48&v=4" width="40" align="left" />
+![Cyprox Logo](https://avatars.githubusercontent.com/u/89649708?s=48&v=4)
 
-**About Cyprox — The Future of AI-Driven Cybersecurity** <br/></br>
+### About Cyprox — The Future of AI-Driven Cybersecurity
 
-
-**Cyprox** is pioneering the future of cybersecurity by combining artificial intelligence and security tools to empower organizations with next-level threat detection and automated response.  
+**Cyprox** is pioneering the future of cybersecurity by combining artificial intelligence and security tools to empower organizations with next-level threat detection and automated response.
 
 > *"The Future of Cybersecurity Humans and AI, Working Together..."*
 
@@ -31,7 +30,7 @@ Explore more at [https://cyprox.io](https://cyprox.io)
 
 ---
 
-## 🌐 Installation 
+## 🌐 Installation
 
 ### Docker
 
@@ -39,15 +38,15 @@ You can use all MCP servers through Docker using the cyprox/mcp-for-security Doc
 Visit [Cyprox](https://cyprox.io) for more information.
 
 ### Manuel
+
 Since each MCP server may require different dependencies, the `start.sh` bash script provides a general setup mechanism. Nonetheless, users should always refer to the installation instructions specific to the corresponding MCP server to ensure proper setup.
 
 ---
 
-
 ## Available Tools
 
 | Tool | Description | Detailed Documentation |
-|------|-------------|------------------------|
+| --- | --- | --- |
 | Amass | Advanced subdomain enumeration and reconnaissance tool | [Amass MCP Documentation](./amass-mcp) |
 | Alterx | Pattern-based wordlist generator for subdomain discovery | [Alterx MCP Documentation](./alterx-mcp/) |
 | Arjun | Run Arjun to discover hidden HTTP parameters | [Arjun MCP Documentation](./arjun-mcp) |
@@ -70,77 +69,110 @@ Since each MCP server may require different dependencies, the `start.sh` bash sc
 | SQLmap | Advanced SQL injection detection and exploitation tool | [SQLmap MCP Documentation](./sqlmap-mcp/) |
 | Waybackurls | Tool for retrieving historical URLs from the Wayback Machine | [Waybackurls MCP Documentation](./waybackurls-mcp/) |
 | WPScan | WordPress vulnerability scanner for detecting plugins, themes, and configuration issues | [WPScan MCP Documentation](./wpscan-mcp/) |
+| WAFW00F | Web Application Firewall identification and fingerprinting tool | [WAFW00F MCP Documentation](./wafw00f-mcp/) |
+| Security Resources | MCP server providing security resources, checklists, and guides | [Resources MCP Documentation](./security-resources-mcp/) |
+| commix | Command injection exploiter | [Commix MCP Documentation](./commix-mcp/) |
 
 ## Quick Reference
 
 ### Alterx MCP  
+
 Generates custom wordlists for subdomain discovery using pattern-based permutations.
 
 ### Amass MCP  
+
 Advanced reconnaissance tool for subdomain enumeration and intelligence gathering with both passive and active modes.
 
 ### arjun MCP  
+
 Discovers hidden HTTP parameters on web applications by scanning URLs, supporting custom wordlists, multiple methods, and adjustable scanning speeds.
 
 ### Assetfinder MCP
+
 Discovers subdomains related to a given domain using passive enumeration techniques. Integrates Tomnomnom’s Assetfinder into the MCP ecosystem for fast and reliable reconnaissance.
 
 ### Cero MCP Server
+
 Certificate-based subdomain discovery tool that extracts domain names from TLS certificates for reconnaissance and infrastructure mapping.
 
 ### Certificate Search (crt.sh) MCP  
+
 Discovers subdomains by querying SSL certificate transparency logs without active scanning.
 
 ### FFUF MCP Server  
+
 URL-based fuzzing tool with support for all FFUF command line arguments.
 
 ### Gowitness MCP Server  
+
 Web screenshot and reconnaissance tool that captures screenshots of web pages, analyzes HTTP responses, and provides visual reconnaissance capabilities for security assessments and web application testing.
 
 ### HTTP Headers Security MCP  
+
 Analyzes HTTP response headers against OWASP security standards with recommendations.
 
 ### httpx MCP  
+
 Performs high-speed probing of discovered subdomains to validate alive hosts, fetch response details, and enrich reconnaissance data without heavy scanning.
 
-### Katana MCP 
+### Katana MCP
+
 Performs fast and customizable web crawling to discover endpoints, scripts, and hidden paths. Supports JavaScript parsing, depth control, and hybrid crawling with headless browsers to enrich reconnaissance and automation workflows.
 
 ### Masscan MCP Server  
+
 Fast port scanning tool for target-based port discovery across networks.
 
 ### MobSF MCP Server  
+
 Mobile application security testing framework for Android, iOS, and Windows applications.
 
 ### Nmap MCP Server  
+
 Full-featured network scanner with detailed service fingerprinting and vulnerability detection.
 
 ### Nuclei MCP Server  
+
 Template-based vulnerability scanner with an extensive library of security checks.
 
-### Scout Suite MCP Server 
+### Scout Suite MCP Server
+
 Performs a multi-service cloud security audit by analyzing cloud configurations and highlighting potential misconfigurations and risks based on best practices.
 
 ### shuffledns MCP  
+
 High-speed DNS brute-forcing and mass subdomain resolution tool to quickly discover valid subdomains using custom resolvers and wordlists.
 
 ### smuggler MCP  
+
 HTTP Request Smuggling detection tool that identifies desynchronization vulnerabilities between front-end and back-end servers.
 
 ### SQLmap MCP Server  
+
 SQL injection testing tool with comprehensive capabilities for vulnerability discovery.
 
 ### SSLScan MCP Server  
+
 SSL/TLS configuration analyzer for identifying weak ciphers and security misconfigurations.
 
 ### Waybackurls MCP  
+
 Retrieves historical URLs from the Wayback Machine to discover forgotten endpoints.
 
 ### WPScan MCP  
+
 WordPress vulnerability scanner for detecting outdated plugins, themes, and common misconfigurations.
 
+### WAFW00F MCP
 
-## TO-DO Tools 
+Identifies and fingerprints Web Application Firewalls (WAF) to help understand the target infrastructure.
+
+### Security Resources MCP
+
+Provides educational resources, checklists, and guides based on industry standards like OWASP to assist in security assessments.
+
+## TO-DO Tools
+
 - commix
 - Corsy
 - CrackMapExec
@@ -162,9 +194,7 @@ WordPress vulnerability scanner for detecting outdated plugins, themes, and comm
 - puredns
 - s3scanner
 - tlsx
-- wafw00f
 - webscreenshot
-- wpscan
 - ...
 
 ## Development
@@ -183,4 +213,3 @@ For installation instructions for each tool, please refer to the individual docu
 ## Usage
 
 Each tool has specific parameters and usage instructions. For detailed information, see the documentation for the specific tool you want to use.
-

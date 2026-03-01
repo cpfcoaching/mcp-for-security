@@ -2,6 +2,11 @@
 
 echo "[*] Starting all services..."
 
+# Initialize mcp-config.json if it doesn't exist or is empty
+if [ ! -s mcp-config.json ]; then
+    echo '{"mcpServers": {}}' > mcp-config.json
+fi
+
 # Loop through all directories in the current folder
 for dir in */ ; do
     # Remove trailing slash
@@ -20,8 +25,9 @@ for dir in */ ; do
     fi
 done
 
-jq '{mcpServers: with_entries(.value += {dockerContainer: ""})}' mcp-config.json > mcp-config.tmp && mv mcp-config.tmp mcp-config.json
+# Add dockerContainer empty string to each server if not present
+jq '.mcpServers |= with_entries(.value += {dockerContainer: ""})' mcp-config.json > mcp-config.tmp && mv mcp-config.tmp mcp-config.json
 
-echo "[*] All build scripts executed. Container will now remain running."
+echo "[*] All build scripts executed. MCP configuration updated."
 
 cat mcp-config.json
