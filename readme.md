@@ -1,5 +1,11 @@
 # MCP for Security
 
+> [!WARNING]
+> **This repository is no longer actively maintained.**
+>
+> All tools have been migrated to **[Bolt](https://github.com/cyberstrikeus/bolt)** — a fully rewritten, Docker-supported MCP security tool server.
+> Please use Bolt instead: [https://github.com/cyberstrikeus/bolt](https://github.com/cyberstrikeus/bolt)
+
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Stars](https://img.shields.io/github/stars/cyproxio/mcp-for-security?style=social)](https://github.com/cyproxio/mcp-for-security/stargazers)
 [![Docker](https://img.shields.io/github/release/cyproxio/mcp-for-security?style=social)](https://github.com/cyproxio/mcp-for-security/releases)
@@ -194,7 +200,9 @@ Provides educational resources, checklists, and guides based on industry standar
 - puredns
 - s3scanner
 - tlsx
+- wafw00f
 - webscreenshot
+- wpscan
 - ...
 
 ## Development
